@@ -12,7 +12,7 @@ export default function WallPage() {
     <main onDoubleClick={toggleFullscreen} className="grid h-dvh w-screen cursor-none place-items-center overflow-hidden bg-black">
       {/* Largest 16:9 box that fits the screen, whatever the TV resolution */}
       <div className="relative aspect-video w-[min(100vw,177.78dvh)]">
-        {BRAND.enabled && BRAND.frame ? (
+        {BRAND.enabled ? (
           <BrandFrame>
             <MosaicWall />
           </BrandFrame>

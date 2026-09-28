@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react'
-import { BRAND, WALL } from '../../../config/wall'
-import { cornerSlots, restoreWallState, toSavedWall, wallReducer } from '../utils/wallReducer'
+import { WALL } from '../../../config/wall'
+import { restoreWallState, toSavedWall, wallReducer } from '../utils/wallReducer'
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -12,15 +12,13 @@ function preloadImage(url, timeoutMs = 8000) {
 }
 
 const TOTAL = WALL.cols * WALL.rows
-// Cells under the brand logo tile never take photos.
-const BLOCKED = BRAND.enabled ? cornerSlots(WALL.cols, WALL.rows, BRAND.blockCols, BRAND.blockRows, BRAND.corner) : []
 
 // localStorage can throw (private mode, quota, blocked storage); the wall must still run without it.
 function loadWall() {
   try {
-    return restoreWallState(JSON.parse(localStorage.getItem(WALL.storageKey)), TOTAL, BLOCKED)
+    return restoreWallState(JSON.parse(localStorage.getItem(WALL.storageKey)), TOTAL)
   } catch {
-    return restoreWallState(null, TOTAL, BLOCKED)
+    return restoreWallState(null, TOTAL)
   }
 }
 

@@ -1,21 +1,17 @@
 import logo from '../assets/brand-logo.png'
 import background from '../assets/mosaic-art-bg.jpg'
 
-// Brand on the wall. enabled: false = plain full-screen mosaic, all 144 cells take photos.
+// Brand frame around the wall. enabled: false = plain full-screen mosaic.
+// The mosaic always keeps all cols × rows cells and the whole artwork; the logo lives in the frame.
 export const BRAND = {
-  enabled: false,
+  enabled: true,
   logoUrl: logo, // replace src/assets/brand-logo.png (transparent PNG works best)
-  color: '#ffffff', // logo tile + frame colour; pick one the logo reads well on
+  color: '#ffffff', // frame colour; pick one the logo reads well on
 
-  // Logo tile: a block of cells in a corner of the mosaic. Photos never land there.
-  corner: 'top-right', // 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
-  blockCols: 3,
-  blockRows: 2,
-
-  // Thin border around the whole wall. The wall scales uniformly inside it (stays 16:9, square cells),
-  // so the sides are 16/9× the top/bottom. 0.97 ≈ 29px sides, 16px top/bottom on a 1080p TV.
-  frame: true,
-  frameScale: 0.97,
+  // The wall is scaled uniformly (stays 16:9, square cells). The border is equal on three sides and the
+  // spare width becomes a logo band on `logoSide`. 1080p: 0.88 ≈ 65px border, 165px logo band.
+  frameScale: 0.88,
+  logoSide: 'right', // 'left' | 'right'
 }
 
 export const WALL = {

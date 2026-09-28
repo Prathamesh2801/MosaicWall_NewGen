@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { cornerSlots, createWallState, pickSlot, restoreWallState, toSavedWall, wallReducer } from './wallReducer.js'
+import { createWallState, pickSlot, restoreWallState, toSavedWall, wallReducer } from './wallReducer.js'
 
 const tile = (id, placedAt = 0) => ({ id, url: `${id}.jpg`, placedAt })
 
@@ -59,25 +59,4 @@ test('restore ignores missing, malformed, resized or blob: data', () => {
   assert.equal(r.tiles[0].id, 'a')
   assert.equal(r.tiles[1], null)
   assert.deepEqual(r.queue, [])
-})
-
-test('cornerSlots maps a block to the right cells', () => {
-  // 4×3 grid, 2×1 block top-right → slots 2, 3
-  assert.deepEqual(cornerSlots(4, 3, 2, 1, 'top-right'), [2, 3])
-  assert.deepEqual(cornerSlots(4, 3, 1, 2, 'bottom-left'), [4, 8])
-})
-
-test('blocked slots never receive photos, even when the wall is full', () => {
-  const blocked = [0, 1]
-  assert.equal(pickSlot([null, null, null], blocked), 2)
-  assert.equal(pickSlot([tile('a', 1), tile('b', 2), tile('c', 9), tile('d', 5)], blocked), 3, 'oldest unblocked')
-
-  let s = createWallState(3, blocked)
-  s = wallReducer(s, { type: 'enqueue', tile: { id: 'x', url: 'x.jpg' } })
-  s = wallReducer(s, { type: 'revealStart' })
-  assert.equal(s.hero.slot, 2)
-
-  const restored = restoreWallState({ tiles: [tile('a'), null, tile('c')] }, 3, blocked)
-  assert.equal(restored.tiles[0], null, 'tile under a newly blocked slot is dropped')
-  assert.equal(restored.tiles[2].id, 'c')
 })
