@@ -1,27 +1,27 @@
 import { BRAND } from '../../../config/wall'
 
-// The wall is the same 16:9 shape scaled by frameScale inside the 16:9 screen box, so the spare width
-// (in px) is 16/9× the spare height. Top, bottom and the outer side get the same border; the rest of
-// the width is the logo band.
-const spare = 1 - BRAND.frameScale
-const border = (spare / 2) * (9 / 16) // outer side, as a fraction of width (same px as top/bottom)
-const band = spare - border
-const onLeft = BRAND.logoSide === 'left'
+// Header band on top, then the wall: same 16:9 shape scaled to the height that's left, so cells stay
+// square. Screen and wall are both 16:9, so the wall's height fraction is also its width fraction.
+// ponytail: side borders come out wider than the bottom one — a 16:9 wall in a 16:9 screen can't have
+// a header and equal borders on the other three sides without squashing cells.
+const scale = 1 - BRAND.headerHeight - BRAND.bottomBorder
+const side = (1 - scale) / 2
 const pct = (n) => `${n * 100}%`
 
-const wallBox = {
-  left: pct(onLeft ? band : border),
-  top: pct(spare / 2),
-  width: pct(BRAND.frameScale),
-  height: pct(BRAND.frameScale),
+const wallBox = { left: pct(side), top: pct(BRAND.headerHeight), width: pct(scale), height: pct(scale) }
+const headerBox = {
+  left: pct(side),
+  width: pct(scale),
+  top: 0,
+  height: pct(BRAND.headerHeight),
+  justifyContent: { left: 'flex-start', center: 'center', right: 'flex-end' }[BRAND.logoAlign] ?? 'center',
 }
-const logoBox = { [onLeft ? 'left' : 'right']: 0, top: 0, width: pct(band), height: '100%' }
 
 export default function BrandFrame({ children }) {
   return (
     <div className="absolute inset-0" style={{ backgroundColor: BRAND.color }}>
-      <div className="absolute grid place-items-center" style={logoBox}>
-        <img src={BRAND.logoUrl} alt="" draggable={false} className="max-h-[80%] w-[70%] object-contain" />
+      <div className="absolute flex items-center" style={headerBox}>
+        <img src={BRAND.logoUrl} alt="" draggable={false} className="h-[70%] max-w-full object-contain" />
       </div>
       <div className="absolute" style={wallBox}>
         {children}

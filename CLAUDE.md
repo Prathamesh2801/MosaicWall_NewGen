@@ -23,7 +23,7 @@ Tests run under plain Node, not Vite — test targets must not import config fil
 
 No `.env`. Everything is in plain JS and requires a rebuild:
 - `src/config/app.js` — `apiUrl` (`/api/sse.php` in dev via the Vite proxy in `vite.config.js`, `./sse.php` in prod) and `useMock`.
-- `src/config/wall.js` — grid size, artwork, tile opacity, reveal timings (`normal` / `fast` + `fastQueueThreshold`), localStorage keys, and `BRAND` (frame colour, `frameScale`, `logoSide`).
+- `src/config/wall.js` — grid size, artwork, tile opacity, reveal timings (`normal` / `fast` + `fastQueueThreshold`), localStorage keys, and `BRAND` (frame colour, `headerHeight`, `bottomBorder`, `logoAlign`).
 
 ## Architecture
 
@@ -38,7 +38,7 @@ Feature folders under `src/features/{capture,wall}` with `components/ hooks/ ser
 - `utils/wallReducer.js` is the pure state machine: `tiles` (fixed-length array, `null | { id, url, placedAt }`), `queue`, `hero` (photo on stage + target slot). The wall chooses the slot itself (`pickSlot`: random empty cell, else oldest tile). Enqueue dedupes by id.
 - `useWallState` drives the reveal loop: when no hero and the queue is non-empty, preload the image + wait `gapMs` → `revealStart`; `HeroReveal` animates assemble → hold → fly into cell, then calls `land()` → `revealDone`. Timing switches to `WALL.fast` once the backlog hits `fastQueueThreshold`.
 - Persistence: every state change is saved to `localStorage` (`toSavedWall` puts an in-flight hero back at the front of the queue); `restoreWallState` drops malformed entries, `blob:` URLs and grid-size mismatches. A hard-reload keystroke (Ctrl/Cmd+Shift+R, Ctrl/Shift+F5) wipes storage first — that's the intended "blank wall" reset. All localStorage access is wrapped in try/catch.
-- Layout is percentage-based from grid maths (no DOM measuring); `HeroReveal` lands via transform-only animation for smoothness on TV browsers. `BrandFrame` scales the wall uniformly (stays 16:9) inside a coloured frame; the spare width (16/9× the spare height) becomes the logo band on `logoSide`, so the logo never covers cells.
+- Layout is percentage-based from grid maths (no DOM measuring); `HeroReveal` lands via transform-only animation for smoothness on TV browsers. `BrandFrame` puts the logo in a top header band (`logoAlign` left/center/right) and scales the wall uniformly (stays 16:9, square cells) into the rest, centred; side borders end up wider than the bottom one (unavoidable with a 16:9 wall in a 16:9 screen).
 
 **Mock mode** (`useMock: true`): capture and wall talk over a `BroadcastChannel` (`src/services/mockChannel.js`) — open both routes in the same browser. On the wall, `M` adds a demo photo, `B` a burst of 12. `H` toggles the status pill (remembered per browser, works in both modes).
 

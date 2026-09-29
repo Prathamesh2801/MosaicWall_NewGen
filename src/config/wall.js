@@ -8,10 +8,11 @@ export const BRAND = {
   logoUrl: logo, // replace src/assets/brand-logo.png (transparent PNG works best)
   color: '#ffffff', // frame colour; pick one the logo reads well on
 
-  // The wall is scaled uniformly (stays 16:9, square cells). The border is equal on three sides and the
-  // spare width becomes a logo band on `logoSide`. 1080p: 0.88 ≈ 65px border, 165px logo band.
-  frameScale: 0.88,
-  logoSide: 'right', // 'left' | 'right'
+  // Logo sits in a header band on top. The wall below stays 16:9 (square cells, same resolution),
+  // centred with equal left/right borders. Fractions of screen height; 1080p: 0.12 ≈ 130px, 0.03 ≈ 32px.
+  headerHeight: 0.12,
+  bottomBorder: 0.03,
+  logoAlign: 'center', // 'left' | 'center' | 'right' (left/right line up with the wall's edges)
 }
 
 export const WALL = {
