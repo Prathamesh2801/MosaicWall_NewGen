@@ -9,7 +9,7 @@ Event photo mosaic. Guests shoot a photo on their phone (`/#/capture`), it's upl
 ## Commands
 
 ```bash
-npm run dev      # Vite dev server, exposed on LAN (phones hit /#/capture); proxies /api/* to the PHP backend
+npm run dev      # Vite dev server, exposed on LAN (phones hit /#/capture)
 npm run build    # dist/ is dropped into the same folder as sse.php (relative base + hash routing)
 npm run lint     # oxlint (.oxlintrc.json)
 npm test         # node --test over src/**/*.test.js
@@ -22,7 +22,7 @@ Tests run under plain Node, not Vite — test targets must not import config fil
 ## Configuration
 
 No `.env`. Everything is in plain JS and requires a rebuild:
-- `src/config/app.js` — `apiUrl` (`/api/sse.php` in dev via the Vite proxy in `vite.config.js`, `./sse.php` in prod) and `useMock`.
+- `src/config/app.js` — `apiUrl` (full URL to `sse.php`, the single source of truth, called directly in dev and prod; the server sends CORS headers) and `useMock`.
 - `src/config/wall.js` — grid size, artwork, tile opacity, reveal timings (`normal` / `fast` + `fastQueueThreshold`), localStorage keys, and `BRAND` (frame colour, `headerHeight`, `bottomBorder`, `logoAlign`).
 
 ## Architecture

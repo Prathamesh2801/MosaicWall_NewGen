@@ -17,7 +17,7 @@ npm run build            # upload dist/ to any cPanel folder (relative base + ha
 ```
 
 
-Settings live in plain JS (no `.env`) in `src/config/app.js`: the API URL and `useMock`.
+Settings live in plain JS (no `.env`) in `src/config/app.js`: `apiUrl` (the backend URL, its only home) and `useMock`.
 Wall look and timing (grid, photo opacity, background artwork) live in `src/config/wall.js`.
 
 **Mock mode** (`useMock: true`, no backend): open `/#/wall` and `/#/capture` in the same browser. Photos sent from the capture tab animate on the wall. On the wall, `M` adds a demo photo and `B` a burst of 12.
@@ -37,8 +37,7 @@ GET  sse.php   text/event-stream
   : keep-alive
 ```
 
-- **Dev:** the server sends no CORS headers, so `npm run dev` proxies `/api/*` to `http://192.168.1.88/ministack/Surf_Goa_Mosaic/*` (see `vite.config.js`).
-- **Production:** upload `dist/` into the same folder as `sse.php`; the app calls `./sse.php`. For a different host, set the full URL in `src/config/app.js` and add CORS headers on the server.
+- The app calls `apiUrl` directly in dev and production; the server sends `Access-Control-Allow-Origin: *`.
 - **Each image is delivered once**, to one connection. Run a single wall, and note that refreshing it starts with an empty mosaic.
 - The wall picks each photo's cell itself: a random empty cell, or the oldest photo once all 144 are full.
 - **Reload-safe wall:** placed photos (same cells) and the waiting queue are saved in the TV browser's `localStorage`, so a normal reload (F5 / Ctrl+R) restores them. **Blank slate:** hard reload on `/#/wall` with Ctrl+Shift+R (Cmd+Shift+R on Mac), Ctrl+F5 or Shift+F5 wipes the saved wall first. Clearing the browser's site data does the same.
