@@ -4,7 +4,7 @@ import background from '../assets/mosaic-art-bg.jpg'
 // Brand frame around the wall. enabled: false = plain full-screen mosaic.
 // The mosaic always keeps all cols × rows cells and the whole artwork; the logo lives in the frame.
 export const BRAND = {
-  enabled: true,
+  enabled: false,
   logoUrl: logo, // replace src/assets/brand-logo.png (transparent PNG works best)
   color: '#ffffff', // frame colour; pick one the logo reads well on
 
