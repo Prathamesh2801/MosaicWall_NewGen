@@ -1,5 +1,5 @@
 import logo from '../assets/brand-logo.png'
-import background from '../assets/mosaic-art-bg.jpg'
+import background from '../assets/mosaic-art-bg.png'
 
 // Brand frame around the wall. enabled: false = plain full-screen mosaic.
 // The mosaic always keeps all cols × rows cells and the whole artwork; the logo lives in the frame.
@@ -24,7 +24,7 @@ export const WALL = {
   // Replace src/assets/mosaic-art-bg.jpg with the same filename and rebuild; no code change needed.
   backgroundUrl: background,
   // Opacity of a settled photo over the artwork: lower = artwork reads stronger, higher = photos read stronger.
-  tileOpacity: 0.3,
+  tileOpacity: 0.5,
 
   // Reveal per photo: gap → assemble from tiles → hold on stage → fly into its cell (flyMs × pace).
   // Switches to `fast` when the backlog reaches fastQueueThreshold; pace scales every animation.
