@@ -1,8 +1,8 @@
 import { BRAND } from '../../../config/wall'
 
-// Header band on top, then the wall: same 16:9 shape scaled to the height that's left, so cells stay
-// square. Screen and wall are both 16:9, so the wall's height fraction is also its width fraction.
-// ponytail: side borders come out wider than the bottom one — a 16:9 wall in a 16:9 screen can't have
+// Header band on top, then the wall: same cols:rows shape scaled to the height that's left, so cells stay
+// square. Box and wall share that shape, so the wall's height fraction is also its width fraction.
+// ponytail: side borders come out wider than the bottom one — a wall in a same-shaped box can't have
 // a header and equal borders on the other three sides without squashing cells.
 const scale = 1 - BRAND.headerHeight - BRAND.bottomBorder
 const side = (1 - scale) / 2

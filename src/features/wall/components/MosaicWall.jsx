@@ -17,7 +17,7 @@ export default function MosaicWall() {
   const filled = state.tiles.filter(Boolean).length
 
   return (
-    // Fills the 16:9 box WallPage gives it (full screen, or inside the brand frame); all maths is in %.
+    // Fills the cols:rows box WallPage gives it (full screen, or inside the brand frame); all maths is in %.
     <div className="relative size-full overflow-hidden bg-black">
       <div className="absolute inset-0 bg-cover bg-center" style={artworkStyle} />
       <MosaicGrid tiles={state.tiles} targetSlot={state.hero?.slot} latestId={state.lastPlacedId} />

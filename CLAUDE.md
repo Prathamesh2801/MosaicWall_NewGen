@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Event photo mosaic. Guests shoot a photo on their phone (`/#/capture`), it's uploaded to a PHP backend (`sse.php`), and a 16:9 TV (`/#/wall`) receives it over SSE and animates it into a 16×9 grid that gradually reveals a background artwork. React 19 + Vite 8 + Tailwind 4 + framer-motion, plain JS (no TypeScript).
+Event photo mosaic. Guests shoot a photo on their phone (`/#/capture`), it's uploaded to a PHP backend (`sse.php`), and a 6ft × 4ft (3:2) LED wall (`/#/wall`) receives it over SSE and animates it into a 15×10 grid that gradually reveals a background artwork. React 19 + Vite 8 + Tailwind 4 + framer-motion, plain JS (no TypeScript).
 
 ## Commands
 
@@ -38,7 +38,7 @@ Feature folders under `src/features/{capture,wall}` with `components/ hooks/ ser
 - `utils/wallReducer.js` is the pure state machine: `tiles` (fixed-length array, `null | { id, url, placedAt }`), `queue`, `hero` (photo on stage + target slot). The wall chooses the slot itself (`pickSlot`: random empty cell, else oldest tile). Enqueue dedupes by id.
 - `useWallState` drives the reveal loop: when no hero and the queue is non-empty, preload the image + wait `gapMs` → `revealStart`; `HeroReveal` animates assemble → hold → fly into cell, then calls `land()` → `revealDone`. Timing switches to `WALL.fast` once the backlog hits `fastQueueThreshold`.
 - Persistence: every state change is saved to `localStorage` (`toSavedWall` puts an in-flight hero back at the front of the queue); `restoreWallState` drops malformed entries, `blob:` URLs and grid-size mismatches. A hard-reload keystroke (Ctrl/Cmd+Shift+R, Ctrl/Shift+F5) wipes storage first — that's the intended "blank wall" reset. All localStorage access is wrapped in try/catch.
-- Layout is percentage-based from grid maths (no DOM measuring); `HeroReveal` lands via transform-only animation for smoothness on TV browsers. `BrandFrame` puts the logo in a top header band (`logoAlign` left/center/right) and scales the wall uniformly (stays 16:9, square cells) into the rest, centred; side borders end up wider than the bottom one (unavoidable with a 16:9 wall in a 16:9 screen).
+- Layout is percentage-based from grid maths (no DOM measuring); `HeroReveal` lands via transform-only animation for smoothness on TV browsers. `BrandFrame` puts the logo in a top header band (`logoAlign` left/center/right) and scales the wall uniformly (keeps the cols:rows shape, square cells) into the rest, centred; side borders end up wider than the bottom one (unavoidable when the wall and its box share a shape). `WallPage` sizes the box from `WALL.cols / WALL.rows`, so the grid config alone sets the screen ratio.
 
 **Mock mode** (`useMock: true`): capture and wall talk over a `BroadcastChannel` (`src/services/mockChannel.js`) — open both routes in the same browser. On the wall, `M` adds a demo photo, `B` a burst of 12. `H` toggles the status pill (remembered per browser, works in both modes).
 

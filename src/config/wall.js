@@ -8,7 +8,7 @@ export const BRAND = {
   logoUrl: logo, // replace src/assets/brand-logo.png (transparent PNG works best)
   color: '#ffffff', // frame colour; pick one the logo reads well on
 
-  // Logo sits in a header band on top. The wall below stays 16:9 (square cells, same resolution),
+  // Logo sits in a header band on top. The wall below keeps its cols:rows shape (square cells, same resolution),
   // centred with equal left/right borders. Fractions of screen height; 1080p: 0.12 ≈ 130px, 0.03 ≈ 32px.
   headerHeight: 0.12,
   bottomBorder: 0.03,
@@ -16,11 +16,12 @@ export const BRAND = {
 }
 
 export const WALL = {
-  cols: 16,
-  rows: 9,
+  // Screen shape follows cols / rows (15 × 10 = 3:2 for the 6ft × 4ft wall); cells stay square.
+  cols: 15,
+  rows: 10,
 
   // The artwork the mosaic reveals. The wall starts black; each landed photo uncovers its cell.
-  // Final art is 16:9 (fills the wall exactly, no crop): 1920×1080 for a 1080p TV, 3840×2160 for 4K.
+  // Final art is 3:2 (fills the wall exactly, no crop): ideally the LED wall's native resolution, else e.g. 3000×2000.
   // Replace src/assets/mosaic-art-bg.jpg with the same filename and rebuild; no code change needed.
   backgroundUrl: background,
   // Opacity of a settled photo over the artwork: lower = artwork reads stronger, higher = photos read stronger.
