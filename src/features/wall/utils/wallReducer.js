@@ -43,7 +43,25 @@ export function pickSlot(tiles, random = Math.random) {
   return oldest
 }
 
-const isKnown = (state, id) =>
+// Fills every empty cell (except the in-flight hero's) with copies of the photos already placed,
+// cycling through them in shuffled order so each repeats evenly. Copies get unique ids and
+// placedAt 0, so they're the "oldest" tiles: photos arriving later replace copies first.
+export function autofillTiles(tiles, reservedSlot = -1, random = Math.random) {
+  const sources = tiles.filter((tile) => tile && !tile.copy)
+  if (!sources.length) return tiles
+  for (let i = sources.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1))
+    ;[sources[i], sources[j]] = [sources[j], sources[i]]
+  }
+  let n = 0
+  return tiles.map((tile, slot) => {
+    if (tile || slot === reservedSlot) return tile
+    const { id, url } = sources[n++ % sources.length]
+    return { id: `${id}~copy${slot}`, url, placedAt: 0, copy: true }
+  })
+}
+
+const isKnown =(state, id) =>
   state.hero?.id === id || state.queue.some((q) => q.id === id) || state.tiles.some((t) => t?.id === id)
 
 export function wallReducer(state, action) {
@@ -64,6 +82,11 @@ export function wallReducer(state, action) {
       const tiles = [...state.tiles]
       tiles[slot] = { id, url, placedAt: action.now }
       return { ...state, tiles, hero: null, lastPlacedId: id }
+    }
+
+    case 'autofill': {
+      const tiles = autofillTiles(state.tiles, state.hero ? state.hero.slot : -1)
+      return tiles === state.tiles ? state : { ...state, tiles }
     }
 
     default:

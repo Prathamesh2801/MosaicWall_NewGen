@@ -60,3 +60,21 @@ test('restore ignores missing, malformed, resized or blob: data', () => {
   assert.equal(r.tiles[1], null)
   assert.deepEqual(r.queue, [])
 })
+
+test('autofill copies placed photos into every empty cell except the hero target', () => {
+  let s = createWallState(6)
+  s.tiles[0] = tile('a', 5)
+  s.tiles[3] = tile('b', 7)
+  s.hero = { id: 'h', url: 'h.jpg', slot: 1 }
+  s = wallReducer(s, { type: 'autofill' })
+
+  assert.equal(s.tiles[1], null, 'hero target stays free')
+  const copies = s.tiles.filter((t) => t?.copy)
+  assert.equal(copies.length, 3)
+  assert.equal(new Set(s.tiles.filter(Boolean).map((t) => t.id)).size, 5, 'ids stay unique')
+  assert.ok(copies.every((t) => ['a.jpg', 'b.jpg'].includes(t.url) && t.placedAt === 0))
+  assert.equal(pickSlot(s.tiles.map((t) => t ?? tile('z', 9))), s.tiles.findIndex((t) => t?.copy), 'copies get replaced first')
+
+  const empty = createWallState(3)
+  assert.equal(wallReducer(empty, { type: 'autofill' }), empty, 'nothing placed = no-op')
+})

@@ -48,6 +48,11 @@ export function useWallState() {
 
   useEffect(() => {
     const onKeyDown = (event) => {
+      // A: fill the remaining empty cells with copies of the photos already on the wall.
+      if (event.key.toLowerCase() === 'a' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+        dispatch({ type: 'autofill' })
+        return
+      }
       if (!isHardReload(event)) return
       resetting.current = true
       try {

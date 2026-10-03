@@ -40,7 +40,7 @@ Feature folders under `src/features/{capture,wall}` with `components/ hooks/ ser
 - Persistence: every state change is saved to `localStorage` (`toSavedWall` puts an in-flight hero back at the front of the queue); `restoreWallState` drops malformed entries, `blob:` URLs and grid-size mismatches. A hard-reload keystroke (Ctrl/Cmd+Shift+R, Ctrl/Shift+F5) wipes storage first — that's the intended "blank wall" reset. All localStorage access is wrapped in try/catch.
 - Layout is percentage-based from grid maths (no DOM measuring); `HeroReveal` lands via transform-only animation for smoothness on TV browsers. `BrandFrame` puts the logo in a top header band (`logoAlign` left/center/right) and scales the wall uniformly (keeps the cols:rows shape, square cells) into the rest, centred; side borders end up wider than the bottom one (unavoidable when the wall and its box share a shape). `WallPage` sizes the box from `WALL.cols / WALL.rows`, so the grid config alone sets the screen ratio.
 
-**Mock mode** (`useMock: true`): capture and wall talk over a `BroadcastChannel` (`src/services/mockChannel.js`) — open both routes in the same browser. On the wall, `M` adds a demo photo, `B` a burst of 12. `H` toggles the status pill (remembered per browser, works in both modes).
+**Mock mode** (`useMock: true`): capture and wall talk over a `BroadcastChannel` (`src/services/mockChannel.js`) — open both routes in the same browser. On the wall, `M` adds a demo photo, `B` a burst of 12. `H` toggles the status pill (remembered per browser, works in both modes). `A` (both modes) autofills every empty cell with copies of the placed photos (`autofillTiles`: `copy: true`, `placedAt: 0`, so later real photos replace copies first); copies persist like any tile.
 
 ## Conventions
 
