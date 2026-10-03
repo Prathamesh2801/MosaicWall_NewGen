@@ -22,7 +22,7 @@ export const WALL = {
 
   // The artwork the mosaic reveals. The wall starts black; each landed photo uncovers its cell.
   // Final art is 3:2 (fills the wall exactly, no crop): ideally the LED wall's native resolution, else e.g. 3000×2000.
-  // Replace src/assets/mosaic-art-bg.jpg with the same filename and rebuild; no code change needed.
+  // Replace src/assets/mosaic-art-bg.png with the same filename and rebuild; no code change needed.
   backgroundUrl: background,
   // Opacity of a settled photo over the artwork: lower = artwork reads stronger, higher = photos read stronger.
   tileOpacity: 0.5,
