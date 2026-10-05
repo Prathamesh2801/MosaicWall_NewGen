@@ -23,13 +23,13 @@ Tests run under plain Node, not Vite — test targets must not import config fil
 
 No `.env`. Everything is in plain JS and requires a rebuild:
 - `src/config/app.js` — `apiUrl` (full URL to `sse.php`, the single source of truth, called directly in dev and prod; the server sends CORS headers) and `useMock`.
-- `src/config/wall.js` — grid size, artwork, tile opacity, reveal timings (`normal` / `fast` + `fastQueueThreshold`), localStorage keys, and `BRAND` (frame colour, `headerHeight`, `bottomBorder`, `logoAlign`).
+- `src/config/wall.js` — grid size, artwork (`src/assets/mosaic-art-bg.png`, 4320×2880 = 3:2 → 288px per cell; swap by overwriting the file, keep 3:2), tile opacity, reveal timings (`normal` / `fast` + `fastQueueThreshold`), localStorage keys, and `BRAND` (frame colour, `headerHeight`, `bottomBorder`, `logoAlign`).
 
 ## Architecture
 
 Feature folders under `src/features/{capture,wall}` with `components/ hooks/ services/ utils/` and an `index.js` barrel; `src/pages/*` compose them; `src/routes/index.jsx` is a `createHashRouter` (`/` → `/capture`).
 
-**Backend** (`server/sse.php` + `.htaccess`, deployed by hand next to `data.json` and `uploads/`; not part of the build): `POST sse.php` multipart field `image` → `201 { success, data: { id, url } }` or `4xx/5xx { error }` (the `error` string is shown to the user; file type comes from the content, not the filename). `GET sse.php` is an SSE stream of `event: image` / `data: { id, url }`. Each image is delivered **exactly once** — run a single wall; the server never resends. Only the newest SSE connection delivers (`sse_owner.txt`): dropped clients' PHP loops can outlive the socket and used to swallow images, now they exit once a newer connection claims ownership.
+**Backend** (`docs/sse.php` + `docs/.htaccess`, deployed by hand next to `data.json` and `uploads/`; not part of the build): `POST sse.php` multipart field `image` → `201 { success, data: { id, url } }` or `4xx/5xx { error }` (the `error` string is shown to the user; file type comes from the content, not the filename). `GET sse.php` is an SSE stream of `event: image` / `data: { id, url }`. Each image is delivered **exactly once** — run a single wall; the server never resends. Only the newest SSE connection delivers (`sse_owner.txt`): dropped clients' PHP loops can outlive the socket and used to swallow images, now they exit once a newer connection claims ownership.
 
 **Capture flow:** `CaptureFlow` (camera → preview → done) → `useUpload` (idle → compressing → uploading → queued | error) → `compressImage` (falls back to the original file if the browser can't decode it, e.g. HEIC) → `uploadPhoto` (axios).
 
