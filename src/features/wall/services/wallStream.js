@@ -3,7 +3,8 @@ import { APP } from '../../../config/app'
 const RETRY_MS = 5000
 
 // GET sse.php → `event: image`, `data: { id, url }`, one event per upload, delivered exactly once
-// across all connected walls (the server flips sse_status on send).
+// (the server flips sse_status on send). Only the newest connection receives: opening another
+// wall (or sse.php in a browser) takes the stream over from this one.
 export function connectWallStream({ onTile, onStatus }) {
   let source
   let retryTimer

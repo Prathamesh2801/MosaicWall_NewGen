@@ -29,7 +29,7 @@ No `.env`. Everything is in plain JS and requires a rebuild:
 
 Feature folders under `src/features/{capture,wall}` with `components/ hooks/ services/ utils/` and an `index.js` barrel; `src/pages/*` compose them; `src/routes/index.jsx` is a `createHashRouter` (`/` → `/capture`).
 
-**Backend contract** (PHP, not in this repo): `POST sse.php` multipart field `image` → `201 { success, data: { id, url } }` or `4xx/5xx { error }` (the `error` string is shown to the user). `GET sse.php` is an SSE stream of `event: image` / `data: { id, url }`. Each image is delivered **exactly once, to one connection** — run a single wall; the server never resends.
+**Backend** (`server/sse.php` + `.htaccess`, deployed by hand next to `data.json` and `uploads/`; not part of the build): `POST sse.php` multipart field `image` → `201 { success, data: { id, url } }` or `4xx/5xx { error }` (the `error` string is shown to the user; file type comes from the content, not the filename). `GET sse.php` is an SSE stream of `event: image` / `data: { id, url }`. Each image is delivered **exactly once** — run a single wall; the server never resends. Only the newest SSE connection delivers (`sse_owner.txt`): dropped clients' PHP loops can outlive the socket and used to swallow images, now they exit once a newer connection claims ownership.
 
 **Capture flow:** `CaptureFlow` (camera → preview → done) → `useUpload` (idle → compressing → uploading → queued | error) → `compressImage` (falls back to the original file if the browser can't decode it, e.g. HEIC) → `uploadPhoto` (axios).
 
