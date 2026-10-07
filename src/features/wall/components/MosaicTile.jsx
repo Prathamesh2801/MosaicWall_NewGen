@@ -1,14 +1,14 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { memo } from 'react'
-import { WALL } from '../../../config/wall'
 
 const EASE = [0.22, 1, 0.36, 1]
 const SETTLE = { duration: 1.4, ease: EASE }
 
 // Empty cell = black cover hiding the artwork behind the grid. When a photo lands (the hero has just
-// shrunk to exactly this box) it starts fully opaque, then fades to tileOpacity while the cover fades
+// shrunk to exactly this box) it starts fully opaque, then fades to `opacity` while the cover fades
 // out, so this piece of the artwork shows through the photo. Restored tiles mount already settled.
-function MosaicTile({ tile, isTarget, isLatest }) {
+// `opacity` is the operator's live level — when they move the slider every placed photo re-animates to it.
+function MosaicTile({ tile, isTarget, isLatest, opacity }) {
   return (
     <div className="relative outline outline-white/[0.04]">
       <motion.div className="absolute inset-0 bg-black" initial={false} animate={{ opacity: tile ? 0 : 1 }} transition={SETTLE} />
@@ -20,7 +20,7 @@ function MosaicTile({ tile, isTarget, isLatest }) {
           alt=""
           draggable={false}
           initial={isLatest ? { opacity: 1 } : false}
-          animate={{ opacity: WALL.tileOpacity }}
+          animate={{ opacity }}
           transition={{ ...SETTLE, delay: 0.2 }}
           className="absolute inset-0 size-full object-cover"
         />

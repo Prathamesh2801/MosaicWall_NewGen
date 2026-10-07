@@ -25,6 +25,8 @@ export const WALL = {
   // Replace src/assets/mosaic-art-bg.png with the same filename and rebuild; no code change needed.
   backgroundUrl: background,
   // Opacity of a settled photo over the artwork: lower = artwork reads stronger, higher = photos read stronger.
+  // This is only the DEFAULT — the operator adjusts it live from the on-wall control panel (key O), and the
+  // chosen value is remembered in this browser under `opacityKey`.
   tileOpacity: 0.5,
 
   // Reveal per photo: gap → assemble from tiles → hold on stage → fly into its cell (flyMs × pace).
@@ -38,4 +40,6 @@ export const WALL = {
   storageKey: 'mosaicwall:wall',
   // Status pill shown/hidden (key H), remembered per browser.
   statusKey: 'mosaicwall:status',
+  // Live photo opacity picked by the operator in the control panel (key O), remembered per browser.
+  opacityKey: 'mosaicwall:opacity',
 }

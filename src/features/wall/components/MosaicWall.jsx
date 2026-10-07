@@ -1,10 +1,12 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { WALL } from '../../../config/wall'
 import { useStatusVisible } from '../hooks/useStatusVisible'
+import { useTileOpacity } from '../hooks/useTileOpacity'
 import { useWallState } from '../hooks/useWallState'
 import { useWallStream } from '../hooks/useWallStream'
 import HeroReveal from './HeroReveal'
 import MosaicGrid from './MosaicGrid'
+import WallControls from './WallControls'
 import WallStatus from './WallStatus'
 
 const artworkStyle = { backgroundImage: `url(${WALL.backgroundUrl})` }
@@ -14,13 +16,14 @@ export default function MosaicWall() {
   const { state, dispatch, timing, land } = useWallState()
   const connection = useWallStream(dispatch)
   const statusVisible = useStatusVisible()
+  const [tileOpacity, setTileOpacity] = useTileOpacity()
   const filled = state.tiles.filter(Boolean).length
 
   return (
     // Fills the cols:rows box WallPage gives it (full screen, or inside the brand frame); all maths is in %.
     <div className="relative size-full overflow-hidden bg-black">
       <div className="absolute inset-0 bg-cover bg-center" style={artworkStyle} />
-      <MosaicGrid tiles={state.tiles} targetSlot={state.hero?.slot} latestId={state.lastPlacedId} />
+      <MosaicGrid tiles={state.tiles} targetSlot={state.hero?.slot} latestId={state.lastPlacedId} opacity={tileOpacity} />
       {state.hero && <HeroReveal key={state.hero.id} hero={state.hero} timing={timing} onLanded={land} />}
       <AnimatePresence>
         {statusVisible && (
@@ -29,6 +32,7 @@ export default function MosaicWall() {
           </motion.div>
         )}
       </AnimatePresence>
+      <WallControls opacity={tileOpacity} setOpacity={setTileOpacity} />
     </div>
   )
 }
