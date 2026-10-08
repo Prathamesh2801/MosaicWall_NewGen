@@ -23,7 +23,7 @@ Tests run under plain Node, not Vite — test targets must not import config fil
 
 No `.env`. Everything is in plain JS and requires a rebuild:
 - `src/config/app.js` — `apiUrl` (full URL to `sse.php`, the single source of truth, called directly in dev and prod; the server sends CORS headers) and `useMock`.
-- `src/config/wall.js` — grid size, artwork (`src/assets/mosaic-art-bg.png`, 4320×2880 = 3:2 → 288px per cell; swap by overwriting the file, keep 3:2), tile opacity, reveal timings (`normal` / `fast` + `fastQueueThreshold`), localStorage keys, and `BRAND` (frame colour, `headerHeight`, `bottomBorder`, `logoAlign`).
+- `src/config/wall.js` — grid size, artwork (`src/assets/mosaic-art-bg.png`, 1995×1330 = 3:2 → 133px per cell; previous art in `src/assets/OLD/`; swap by overwriting the file, keep 3:2), tile opacity, reveal timings (`normal` / `fast` + `fastQueueThreshold`), localStorage keys, and `BRAND` (frame colour, `headerHeight`, `bottomBorder`, `logoAlign`).
 
 ## Architecture
 
